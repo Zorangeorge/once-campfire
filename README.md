@@ -49,6 +49,43 @@ If you'd rather run the Docker image yourself, you can read more about that in t
 > that people have someone to contact if they need help with their account. If that bothers you, put in any
 > email address you want and create yourself a new admin account.
 
+### Single Sign-On (SSO)
+
+Campfire supports SSO via OpenID Connect (OIDC), allowing integration with
+identity providers such as Keycloak, Okta, Azure AD, and Google Workspace.
+SSO is entirely optional — when no SSO environment variables are set, the login
+page shows only the standard email/password form.
+
+Both SSO and password authentication can coexist. Users who first registered with
+a password will have their account automatically linked when they sign in via SSO
+(matched by email address). New users signing in via SSO for the first time are
+created automatically and do not need a join code.
+
+To disable password-based registration (so new users can only join via SSO), set:
+
+- `DISABLE_PASSWORD_REGISTRATION=true` - disables the join code registration
+  page and hides the invite link from the admin panel. Existing users can still
+  sign in with their password.
+
+**OIDC configuration (multiple providers):**
+
+- `OIDC_PROVIDERS` - comma-separated provider keys (for example: `google,github,keycloak`)
+- For each key, define:
+    - `OIDC_<KEY>_ISSUER` - issuer URL
+    - `OIDC_<KEY>_CLIENT_ID` - client ID
+    - `OIDC_<KEY>_CLIENT_SECRET` - client secret
+    - `OIDC_<KEY>_REDIRECT_URI` - callback URL (for example `https://chat.example.com/auth/oidc_google/callback`)
+- Optional per provider:
+    - `OIDC_<KEY>_PROVIDER_NAME` - label shown on the sign-in button (defaults to titleized key)
+    - `OIDC_<KEY>_SCOPE` - scopes separated by spaces or commas (defaults to `openid email profile`)
+    - `OIDC_<KEY>_CLIENT_AUTH_METHOD` - client auth method (defaults to `basic`)
+    - `OIDC_<KEY>_END_SESSION_ENDPOINT` - explicit RP-initiated logout endpoint (otherwise discovered from issuer metadata - `${OIDC_<KEY>_ISSUER}/.well-known/openid-configuration`)
+
+Provider keys must use lowercase letters, numbers, and underscores.
+When a user signs out from Campfire, the app also attempts OIDC RP-initiated
+logout with the provider used for that login session and includes
+`id_token_hint` when available.
+
 ## Development
 
 You are welcome - and encouraged - to modify Campfire to your liking.
