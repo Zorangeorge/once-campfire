@@ -15,6 +15,27 @@ class RoomsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "show sends an enforced content security policy" do
+    get room_url(users(:david).rooms.last)
+
+    policy = response.headers["Content-Security-Policy"]
+    nonce = css_select("meta[name='csp-nonce']").first["content"]
+
+    assert_response :success
+    assert_not_empty policy
+    assert_nil response.headers["Content-Security-Policy-Report-Only"]
+    assert_includes policy, "default-src 'self'"
+    assert_includes policy, "base-uri 'self'"
+    assert_includes policy, "frame-ancestors 'none'"
+    assert_includes policy, "object-src 'none'"
+    assert_includes policy, "img-src 'self' https: data: blob:"
+    assert_includes policy, "connect-src 'self' https: ws: wss:"
+    assert_includes policy, "style-src 'self' 'unsafe-inline'"
+    assert_includes policy, "script-src 'self' 'nonce-#{nonce}'"
+    assert_not_empty css_select("script")
+    assert_empty css_select("script").reject { |script| script["nonce"] == nonce }
+  end
+
   test "show grants membership with a valid invite token for signed-in users" do
     sign_in :jz
     room = rooms(:watercooler)
