@@ -72,6 +72,15 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert parsed_cookies.signed[:session_token]
   end
 
+  test "create marks session token cookie secure when secure cookies are enabled" do
+    Rails.application.config.x.stubs(:secure_cookies).returns(true)
+    https!
+
+    post session_url, params: { email_address: "david@37signals.com", password: "secret123456" }
+
+    assert_match(/session_token=.*;\s*secure/i, Array(response.headers["Set-Cookie"]).join("\n"))
+  end
+
   test "create with invalid credentials" do
     post session_url, params: { email_address: "david@37signals.com", password: "wrong" }
 

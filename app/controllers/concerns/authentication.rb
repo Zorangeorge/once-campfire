@@ -89,11 +89,15 @@ module Authentication
     end
 
     def set_authentication_cookie(session)
-      cookies.signed.permanent[:session_token] = { value: session.token, httponly: true, same_site: :lax }
+      cookies.signed.permanent[:session_token] = authentication_cookie_options.merge(value: session.token)
     end
 
     def remove_authentication_cookie
-      cookies.delete(:session_token)
+      cookies.delete(:session_token, authentication_cookie_options)
+    end
+
+    def authentication_cookie_options
+      { httponly: true, same_site: :lax, secure: Rails.application.config.x.secure_cookies }
     end
 
     def deny_bots

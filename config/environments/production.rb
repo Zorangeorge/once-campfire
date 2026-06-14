@@ -79,9 +79,15 @@ Rails.application.configure do
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
 
-  # Always be SSL'ing (unless told not to)
-  config.assume_ssl = ENV["DISABLE_SSL"].blank?
-  config.force_ssl  = ENV["DISABLE_SSL"].blank?
+  boolean = ActiveModel::Type::Boolean.new
+
+  # Redirect to SSL unless told not to. When SSL is terminated upstream, keep
+  # secure cookies and SSL request handling enabled without forcing redirects.
+  config.force_ssl = ENV["DISABLE_SSL"].blank?
+  config.x.secure_cookies = boolean.cast(
+    ENV.fetch("SECURE_COOKIES", config.force_ssl || ENV["BASE_URL"].to_s.start_with?("https://"))
+  )
+  config.assume_ssl = boolean.cast(ENV.fetch("ASSUME_SSL", config.x.secure_cookies))
 
   # Don't log any deprecations.
   config.active_support.report_deprecations = false

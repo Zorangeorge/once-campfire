@@ -1,6 +1,7 @@
 services:
   campfire:
-    image: ghcr.io/bloxweaver/once-campfire:latest
+    image: 07ad49a3.c1.gra9.container-registry.ovh.net/private/once-campfire:develop
+    platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile
