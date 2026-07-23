@@ -15,6 +15,24 @@ class Rooms::ClosedsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "edit exposes room SSO invite link when SSO is enabled" do
+    with_sso_enabled do
+      get edit_rooms_closed_url(rooms(:watercooler))
+
+      assert_response :success
+      assert_select "input#invite_url[value=?]", room_url(rooms(:watercooler), invite: rooms(:watercooler).sso_invite_token)
+    end
+  end
+
+  test "edit does not expose room SSO invite link when SSO is disabled" do
+    with_env("OIDC_PROVIDERS" => nil) do
+      get edit_rooms_closed_url(rooms(:watercooler))
+    end
+
+    assert_response :success
+    assert_select "input#invite_url", count: 0
+  end
+
   test "create" do
     assert_turbo_stream_broadcasts [ users(:david), :rooms ], count: 1 do
     assert_turbo_stream_broadcasts [ users(:kevin), :rooms ], count: 1 do
@@ -75,4 +93,16 @@ class Rooms::ClosedsControllerTest < ActionDispatch::IntegrationTest
       assert_redirected_to root_url
     end
   end
+
+  private
+    def with_sso_enabled(&)
+      with_env(
+        "OIDC_PROVIDERS" => "test",
+        "OIDC_TEST_ISSUER" => "https://idp.example.test/realms/campfire",
+        "OIDC_TEST_CLIENT_ID" => "test-client-id",
+        "OIDC_TEST_CLIENT_SECRET" => "test-client-secret",
+        "OIDC_TEST_REDIRECT_URI" => "https://campfire.example.test/auth/oidc_test/callback",
+        &
+      )
+    end
 end

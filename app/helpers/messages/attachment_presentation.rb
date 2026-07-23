@@ -31,7 +31,7 @@ class Messages::AttachmentPresentation
       inline_media_dimension_constraints(width, height) do
         tag.video \
           src: rails_blob_path(message.attachment), poster: url_for(message.attachment.preview(format: :webp, resize_to_limit: [ Message::THUMBNAIL_MAX_WIDTH, Message::THUMBNAIL_MAX_HEIGHT ])),
-          controls: true, preload: :none, width: "100%", height: "100%", class: "message__attachment"
+          controls: true, preload: :none, width: width, height: height, class: "message__attachment"
       end
     end
 
@@ -47,9 +47,7 @@ class Messages::AttachmentPresentation
 
     def inline_media_dimension_constraints(width, height, &)
       if width && height
-        aspect_ratio = (width / height.to_f)
-
-        tag.div class: "max-inline-size center flex overflow-clip", style: "width: #{width / 2}px; aspect-ratio: #{aspect_ratio};", &
+        tag.div class: "max-inline-size center flex overflow-clip", &
       else
         tag.div class: "max-inline-size center overflow-clip", &
       end
@@ -86,13 +84,13 @@ class Messages::AttachmentPresentation
     end
 
     def download_link
-      link_to download_url, class: "btn message__action-btn hide-in-ios-pwa", style: "--width: auto;" do
+      link_to download_url, class: "btn message__action-btn message__action-btn--auto hide-in-ios-pwa" do
         broadcast_image_tag("download.svg", aria: { hidden: "true" }, size: 20) + tag.span("Download #{ filename }", class: "for-screen-reader")
       end
     end
 
     def share_button
-      tag.button class: "btn message__action-btn", style: "--width: auto;", data: { controller: "web-share", action: "web-share#share", web_share_files_value: download_url } do
+      tag.button class: "btn message__action-btn message__action-btn--auto", data: { controller: "web-share", action: "web-share#share", web_share_files_value: download_url } do
         broadcast_image_tag("share.svg", aria: { hidden: "true" }, size: 20) + tag.span("Share #{ filename }", class: "for-screen-reader")
       end
     end

@@ -16,6 +16,7 @@
 
         <% oidc_providers.each do |provider| %>
           <%= form_with url: "/auth/#{provider.fetch(:strategy)}", data: { turbo: false } do %>
+            <%= hidden_field_tag :origin, session[:return_to_after_authenticating] if session[:return_to_after_authenticating].present? %>
             <button type="submit" class="btn btn--reversed center txt-large">Sign in with <%= provider.fetch(:display_name) %></button>
           <% end %>
         <% end %>
@@ -89,6 +90,7 @@
 
         <% oidc_providers.each do |provider| %>
           <%= form_with url: "/auth/#{provider.fetch(:strategy)}", data: { turbo: false } do %>
+            <%= hidden_field_tag :origin, session[:return_to_after_authenticating] if session[:return_to_after_authenticating].present? %>
             <button type="submit" class="btn btn--reversed center txt-large"><%= provider.fetch(:display_name) %></button>
           <% end %>
         <% end %>

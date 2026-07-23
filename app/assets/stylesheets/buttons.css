@@ -154,6 +154,10 @@
   --btn-color: var(--color-text-reversed);
 }
 
+.btn--compact-radius {
+  --btn-border-radius: 0.5em;
+}
+
 .btn--reversed,
 .btn--negative {
   --btn-border-color: transparent;

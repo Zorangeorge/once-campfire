@@ -19,13 +19,21 @@ class User < ApplicationRecord
 
   has_secure_password validations: false
 
-  after_create_commit :grant_membership_to_open_rooms
+  after_create_commit :join_open_rooms
 
   scope :ordered, -> { order("LOWER(name)") }
   scope :filtered_by, ->(query) { where("name like ?", "%#{query}%") }
 
   def sso?
     sso_provider.present?
+  end
+
+  def join_open_rooms
+    Rooms::Open.find_each do |room|
+      Membership.create_or_find_by!(room:, user: self) do |membership|
+        membership.involvement = room.default_involvement
+      end
+    end
   end
 
   def initials
@@ -54,10 +62,6 @@ class User < ApplicationRecord
   end
 
   private
-    def grant_membership_to_open_rooms
-      Membership.insert_all(Rooms::Open.pluck(:id).collect { |room_id| { room_id: room_id, user_id: id } })
-    end
-
     def deactived_email_address
       email_address&.gsub(/@/, "-deactivated-#{SecureRandom.uuid}@")
     end

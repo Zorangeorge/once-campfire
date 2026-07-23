@@ -14,7 +14,7 @@ module ApplicationHelper
 
   def custom_styles_tag
     if custom_styles = Current.account&.custom_styles
-      tag.style(custom_styles.to_s.html_safe, data: { turbo_track: "reload" })
+      tag.style(custom_styles.to_s.html_safe, nonce: content_security_policy_nonce, data: { turbo_track: "reload" })
     end
   end
 

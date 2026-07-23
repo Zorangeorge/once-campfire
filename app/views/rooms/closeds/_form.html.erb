@@ -2,8 +2,8 @@
   <%= user_filter_menu_tag do %>
     <% if Current.user.can_administer?(room) %>
       <li class="flex align-center gap margin-none">
-        <figure class="avatar flex-item-no-shrink" style="--avatar-border-radius: 0; --avatar-size: 4ch;">
-          <%= image_tag "everyone.svg", aria: { hidden: "true" }, class: "colorize--black", style: "background-color: transparent" %>
+        <figure class="avatar avatar--transparent avatar--sm flex-item-no-shrink">
+          <%= image_tag "everyone.svg", aria: { hidden: "true" }, class: "colorize--black fill-transparent" %>
           <span class="for-screen-reader">Everyone</span>
         </figure>
 
@@ -22,7 +22,7 @@
         <% end %>
       </li>
 
-      <hr class="separator full-width" style="--border-style: solid">
+      <hr class="separator separator--solid full-width">
     <% end %>
 
     <%= user_filter_search_tag if selected_users.count +  unselected_users.count > 20 %>
@@ -31,7 +31,7 @@
       <%= render partial: "rooms/closeds/user", collection: selected_users, locals: { room: room, selected: true } %>
 
       <% if selected_users.any? && unselected_users.any? %>
-        <hr class="separator full-width" style="--border-style: solid">
+        <hr class="separator separator--solid full-width">
       <% end %>
 
       <%= render partial: "rooms/closeds/user", collection: unselected_users, locals: { room: room, selected: false } %>

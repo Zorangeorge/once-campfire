@@ -43,6 +43,10 @@
   inline-size: var(--thumbnail-size);
 }
 
+.composer__text {
+  order: -1;
+}
+
 :is(img, span):is(.composer__file-thumbnail) {
   aspect-ratio: var(--aspect-ratio);
   block-size: auto;

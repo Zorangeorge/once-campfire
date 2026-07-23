@@ -17,7 +17,7 @@
   </div>
 <% end %>
 
-<section class="panel flex flex-column gap" style="view-transition-name: avatar-<%= @user.id %>">
+<section class="panel flex flex-column gap">
   <%= render partial: "pwa/install_instructions" %>
 
   <div class="align-center center avatar__form gap" data-controller="upload-preview">
@@ -100,7 +100,7 @@
       <%= render partial: "users/profiles/membership", collection: @shared_memberships %>
 
       <% if @direct_memberships.any? && @shared_memberships.any? %>
-        <hr class="separator full-width" style="--border-style: solid">
+        <hr class="separator separator--solid full-width">
       <% end %>
 
       <%= render partial: "users/profiles/membership", collection: @direct_memberships %>

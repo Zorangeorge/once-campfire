@@ -7,7 +7,7 @@
     <span class="for-screen-reader">Upload bot avatar</span>
   </div>
 
-  <div class="avatar input--file txt-xx-large" style="--avatar-size: var(--btn-size);">
+  <div class="avatar avatar--btn input--file txt-xx-large">
     <%= image_tag bot.avatar.attached? ? bot.avatar : "default-bot-avatar.svg", alt: "Bot avatar", size: 48, data: { upload_preview_target: "image" } %>
   </div>
 </label>

@@ -6,14 +6,14 @@
   </div>
 <% end %>
 
-<section class="panel txt-align-center" style="view-transition-name: edit-room-<%= room.id %>">
+<section class="panel txt-align-center">
   <%= yield %>
 </section>
 
-<% if Current.user.can_administer?(@room) && !password_registration_enabled? && sso_enabled? %>
+<% if Current.user.can_administer?(@room) && @room.closed? && sso_enabled? %>
   <section class="panel txt-align-center">
     <div class="flex flex-column gap center-block upad">
-      <p class="txt-small txt-subtle">People who aren't on Campfire yet can sign in with SSO using this link and will be added to this room on first sign in.</p>
+      <p class="txt-small txt-subtle">People can sign in with SSO using this link and will be added to this room after signing in.</p>
       <%= render "rooms/show/sso_invite", room: @room %>
     </div>
   </section>

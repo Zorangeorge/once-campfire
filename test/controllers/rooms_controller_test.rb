@@ -16,24 +16,43 @@ class RoomsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show sends an enforced content security policy" do
+    accounts(:signal).update!(custom_styles: "body { --custom-test-style: 1; }")
+
     get room_url(users(:david).rooms.last)
 
     policy = response.headers["Content-Security-Policy"]
     nonce = css_select("meta[name='csp-nonce']").first["content"]
+    custom_style = css_select("style[data-turbo-track='reload']").first
 
     assert_response :success
     assert_not_empty policy
     assert_nil response.headers["Content-Security-Policy-Report-Only"]
     assert_includes policy, "default-src 'self'"
     assert_includes policy, "base-uri 'self'"
+    assert_includes policy, "form-action 'self'"
     assert_includes policy, "frame-ancestors 'none'"
     assert_includes policy, "object-src 'none'"
     assert_includes policy, "img-src 'self' https: data: blob:"
     assert_includes policy, "connect-src 'self' https: ws: wss:"
-    assert_includes policy, "style-src 'self' 'unsafe-inline'"
+    assert_includes policy, "style-src 'self' 'nonce-#{nonce}'"
+    assert_includes policy, "style-src-attr 'none'"
     assert_includes policy, "script-src 'self' 'nonce-#{nonce}'"
+    assert_no_match(/unsafe-/, policy)
     assert_not_empty css_select("script")
     assert_empty css_select("script").reject { |script| script["nonce"] == nonce }
+    assert_equal nonce, custom_style["nonce"]
+    assert_empty css_select("[style]")
+  end
+
+  test "show includes content security policy form actions from env" do
+    with_env("CSP_FORM_ACTION_SOURCES" => "https://auth.example.test, https://*.bloxweaver.com") do
+      get room_url(users(:david).rooms.last)
+    end
+
+    policy = response.headers["Content-Security-Policy"]
+
+    assert_response :success
+    assert_includes policy, "form-action 'self' https://auth.example.test https://*.bloxweaver.com"
   end
 
   test "show grants membership with a valid invite token for signed-in users" do

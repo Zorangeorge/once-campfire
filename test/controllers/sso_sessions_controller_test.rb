@@ -77,6 +77,67 @@ class SsoSessionsControllerTest < ActionDispatch::IntegrationTest
     assert room.users.exists?(email_address: "newuser@example.com")
   end
 
+  test "SSO login from a room invite grants membership to returning SSO user" do
+    user = users(:jz)
+    room = rooms(:watercooler)
+    invite_url = room_url(room, invite: room.sso_invite_token)
+
+    user.update!(sso_provider: OIDC_PROVIDER.to_s, sso_uid: "idp-uid-jz")
+    user.sessions.create!(user_agent: "Existing browser", ip_address: "127.0.0.1")
+    set_omniauth_auth(provider: OIDC_PROVIDER, uid: "idp-uid-jz", email: user.email_address, name: user.name)
+
+    get invite_url
+    assert_redirected_to new_session_url
+
+    assert_difference -> { room.memberships.count }, +1 do
+      get sso_callback_url(provider: OIDC_PROVIDER)
+    end
+
+    assert_redirected_to invite_url
+    assert room.users.exists?(id: user.id)
+  end
+
+  test "SSO login grants invited room membership from OmniAuth origin" do
+    room = rooms(:watercooler)
+    invite_url = room_url(room, invite: room.sso_invite_token)
+
+    assert_difference -> { room.memberships.count }, +1 do
+      get sso_callback_url(provider: OIDC_PROVIDER), env: { "omniauth.origin" => invite_url }
+    end
+
+    assert room.users.exists?(email_address: "newuser@example.com")
+  end
+
+  test "first SSO login from an account join link creates user and returns through join link" do
+    join_link = join_url(accounts(:signal).join_code)
+
+    with_sso_join_enabled do
+      get join_link
+      assert_redirected_to new_session_url
+
+      assert_difference -> { User.count }, +1 do
+        get sso_callback_url(provider: OIDC_PROVIDER)
+      end
+    end
+
+    assert_redirected_to join_link
+
+    follow_redirect!
+    assert_redirected_to root_url
+    assert User.exists?(email_address: "newuser@example.com")
+  end
+
+  test "first SSO login does not return through an invalid account join link" do
+    with_sso_join_enabled do
+      get join_url("not")
+      assert_response :not_found
+
+      get sso_callback_url(provider: OIDC_PROVIDER)
+    end
+
+    assert_redirected_to root_url
+  end
+
   test "first SSO login ignores invalid room invite token" do
     room = rooms(:watercooler)
     invite_url = room_url(room, invite: "invalid-token")
@@ -132,4 +193,17 @@ class SsoSessionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_session_url
     assert_operator flash[:alert].length, :<=, 400
   end
+
+  private
+    def with_sso_join_enabled(&)
+      with_env(
+        "OIDC_PROVIDERS" => "test",
+        "OIDC_TEST_ISSUER" => "https://idp.example.test/realms/campfire",
+        "OIDC_TEST_CLIENT_ID" => "test-client-id",
+        "OIDC_TEST_CLIENT_SECRET" => "test-client-secret",
+        "OIDC_TEST_REDIRECT_URI" => "https://campfire.example.test/auth/#{OIDC_PROVIDER}/callback",
+        "DISABLE_PASSWORD_REGISTRATION" => "true",
+        &
+      )
+    end
 end

@@ -215,3 +215,39 @@ trix-editor,
     margin: 0;
   }
 }
+
+.message__markdown {
+  display: grid;
+  row-gap: 0.75em;
+
+  > * + * {
+    margin-block-start: 0;
+  }
+
+  > :first-child {
+    margin-block-start: 0;
+  }
+
+  > :last-child {
+    margin-block-end: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    line-height: 1.2;
+  }
+
+  h2 { font-size: 1.2rem; }
+  h3 { font-size: 1.05rem; }
+  h4,
+  h5,
+  h6 { font-size: 1rem; }
+
+  p {
+    margin: 0;
+  }
+}

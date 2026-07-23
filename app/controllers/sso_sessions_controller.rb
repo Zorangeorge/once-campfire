@@ -12,7 +12,7 @@ class SsoSessionsController < ApplicationController
     user = SsoAuthentication.find_or_create_user_from(auth)
 
     if user.active?
-      grant_membership_to_invited_room(user) if user.sessions.none?
+      grant_membership_to_invited_room(user)
       start_new_session_for(
         user,
         sso_provider: auth.provider.to_s,
@@ -49,7 +49,7 @@ class SsoSessionsController < ApplicationController
     end
 
     def invited_room_from_return_url
-      return_to = session[:return_to_after_authenticating].to_s
+      return_to = sso_return_to_url.to_s
       return if return_to.blank?
 
       uri = URI.parse(return_to)
@@ -62,6 +62,10 @@ class SsoSessionsController < ApplicationController
       room if room&.id == room_id
     rescue URI::InvalidURIError
       nil
+    end
+
+    def sso_return_to_url
+      session[:return_to_after_authenticating].presence || request.env["omniauth.origin"].presence
     end
 
     def extract_oidc_id_token(auth)

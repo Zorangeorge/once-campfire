@@ -17,7 +17,7 @@
 
 <section class="panel txt-align-center">
   <div class="flex flex-column gap <%= "banned" if @user.banned? %>">
-    <div class="avatar txt-xx-large center" style="background: white">
+    <div class="avatar avatar--white txt-xx-large center">
       <%= image_tag fresh_user_avatar_path(@user), alt: "Profile avatar", class: "avatar" %>
     </div>
 
@@ -31,7 +31,7 @@
       </div>
     <% else %>
       <% unless @user.deactivated? %>
-        <div class="flex flex-column gap" style="--row-gap: calc(var(--block-space) / 3)">
+        <div class="flex flex-column gap gap-row-third">
           <h1 class="txt-x-large txt-tight-lines margin-none"><%= @user.name %></h1>
           <% if Current.user.can_administer? %>
             <div><%= mail_to @user.email_address %></div>

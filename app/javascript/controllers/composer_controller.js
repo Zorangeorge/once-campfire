@@ -170,10 +170,9 @@ export default class extends Controller {
 
       const node = document.createElement("button")
       node.setAttribute("type","button")
-      node.setAttribute("style","gap: 0")
       node.dataset.action = "composer#fileUnpicked"
       node.dataset.composerIndexParam = index
-      node.className = "btn btn--plain composer__file txt-normal position-relative unpad flex-column"
+      node.className = "btn btn--plain composer__file txt-normal position-relative unpad flex-column gap-none"
       node.innerHTML = file.type.match(/^image\/.*/) ? `<img role="presentation" class="flex-item-no-shrink composer__file-thumbnail" src="${URL.createObjectURL(file)}">` : `<span class="composer__file-thumbnail composer__file-thumbnail--common colorize--black"></span>`
       node.innerHTML += `<span class="pad-inline txt-small flex align-center max-width composer__file-caption"><span class="overflow-ellipsis">${escapeHTML(filename)}.</span><span class="flex-item-no-shrink">${escapeHTML(extension)}</span></span>`
 
@@ -184,8 +183,10 @@ export default class extends Controller {
   }
 
   #pendingUploadProgress(filename, percent=0) {
+    const progress = Math.min(100, Math.max(0, Math.round(percent / 10) * 10))
+
     return `
-      <div class="message__pending-upload flex align-center gap" style="--percentage: ${percent}%">
+      <div class="message__pending-upload message__pending-upload--progress-${progress} flex align-center gap">
         <div class="composer__file-thumbnail composer__file-thumbnail--common colorize--black borderless flex-item-no-shrink"></div>
         <div>${escapeHTML(filename)} - <span>${percent}%</span></div>
       </div>

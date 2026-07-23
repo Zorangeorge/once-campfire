@@ -4,3 +4,7 @@
   flex-grow: 1;
   min-inline-size: var(--inline-space-double);
 }
+
+.separator--solid {
+  --border-style: solid;
+}

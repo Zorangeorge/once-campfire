@@ -62,6 +62,15 @@
   row-gap: var(--block-space-half);
 }
 
+.gap-column-half { --column-gap: var(--inline-space-half); }
+.gap-column-room { --column-gap: 0.5em; }
+.gap-column-boost { --column-gap: 0.4ch; --row-gap: 0; }
+.gap-column-boost-form { --column-gap: 0.7ch; }
+.gap-column-custom-styles { --column-gap: 0.5ch; --row-gap: 0; }
+.gap-row-tight { --row-gap: 0.5em; }
+.gap-row-third { --row-gap: calc(var(--block-space) / 3); }
+.gap-none { gap: 0; }
+
 /* Sizing */
 .full-width { inline-size: 100%; }
 .min-width { min-inline-size: 0; }
@@ -145,6 +154,19 @@
 
 /* Border radius */
 .border-radius { border-radius: var(--border-radius, 1em); }
+
+.inline-space-block {
+  --inline-space: var(--block-space);
+}
+
+/* View transitions */
+.transition-account-settings { view-transition-name: account-settings; }
+.transition-chat-bots { view-transition-name: chat-bots; }
+.transition-custom-styles { view-transition-name: custom-styles; }
+.transition-input-switcher { view-transition-name: input-switcher; }
+.transition-input-btn { view-transition-name: input-btn; }
+.transition-new-room { view-transition-name: new-room; }
+.transition-new-direct { view-transition-name: new-direct; }
 
 /* Shadows */
 .shadow {

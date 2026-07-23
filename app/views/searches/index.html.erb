@@ -61,7 +61,7 @@
 <% content_for :footer do %>
   <div class="composer flex align-end gap">
     <%= link_to room_path(@return_to_room),
-            class: "btn flex-item-no-shrink margin-block-end", style: "view-transition-name: input-switcher; --btn-border-radius: 0.5em" do %>
+            class: "btn btn--compact-radius transition-input-switcher flex-item-no-shrink margin-block-end" do %>
       <%= image_tag "arrow-left.svg", aria: { hidden: "true" } %>
       <span class="for-screen-reader">Exit search </span>
     <% end %>
@@ -69,7 +69,7 @@
     <%= form_with url: searches_path, class: "margin-block flex-item-grow contain flex align-center gap",
           data: { controller: "form", action: "keydown.esc->form#cancel" } do |form| %>
       <div class="composer__input flex align-center flex-item-grow gap full-width input input--actor min-width">
-        <%= image_tag "search.svg", size: 20, aria: { hidden: "true" }, class: "composer__input-hint colorize--black", style: "view-transition-name: input-btn;" %>
+        <%= image_tag "search.svg", size: 20, aria: { hidden: "true" }, class: "composer__input-hint colorize--black transition-input-btn" %>
 
         <%= form.text_field :q, value: params[:q], class: "searches__input input flex-item-grow", role: "searchbox", aria: { label: "search" }, autofocus: true, required: true %>
 
@@ -78,7 +78,7 @@
           <span class="for-screen-reader">Clear search field</span>
         <% end %>
 
-        <%= form.button type: "submit", class: "btn btn--reversed flex-item-no-shrink txt-small", style: "--btn-border-radius: 0.5em" do %>
+        <%= form.button type: "submit", class: "btn btn--reversed btn--compact-radius flex-item-no-shrink txt-small" do %>
           <%= image_tag "arrow-up.svg", aria: { hidden: "true" } %>
           <span class="for-screen-reader">Search</span>
         <% end %>

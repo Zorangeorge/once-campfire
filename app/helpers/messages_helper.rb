@@ -57,7 +57,7 @@ module MessagesHelper
     when "sound"
       message_sound_presentation(message)
     else
-      auto_link h(ContentFilters::TextMessagePresentationFilters.apply(message.body.body)), html: { target: "_blank" }
+      message_text_presentation(message)
     end
   rescue Exception => e
     Sentry.capture_exception(e, extra: { message: message })
@@ -85,6 +85,20 @@ module MessagesHelper
 
     def message_attachment_presentation(message)
       Messages::AttachmentPresentation.new(message, context: self).render
+    end
+
+    def message_text_presentation(message)
+      content = ContentFilters::TextMessagePresentationFilters.apply(message.body.body)
+
+      if markdown_content?(content)
+        Messages::MarkdownPresentation.new(content.to_plain_text, context: self).render
+      else
+        auto_link ERB::Util.html_escape(content), html: { target: "_blank" }
+      end
+    end
+
+    def markdown_content?(content)
+      content.to_html.exclude?("<")
     end
 
     def message_sound_presentation(message)

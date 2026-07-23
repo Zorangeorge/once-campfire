@@ -1,8 +1,8 @@
 <%= render layout: "rooms/layouts/form", locals: { room: room } do %>
   <%= user_filter_menu_tag do %>
     <li class="flex align-center gap margin-none">
-      <figure class="avatar flex-item-no-shrink" style="--avatar-border-radius: 0; --avatar-size: 4ch;">
-        <%= image_tag "everyone.svg", aria: { hidden: "true" }, class: "colorize--black", style: "background-color: transparent" %>
+      <figure class="avatar avatar--transparent avatar--sm flex-item-no-shrink">
+        <%= image_tag "everyone.svg", aria: { hidden: "true" }, class: "colorize--black fill-transparent" %>
         <span class="for-screen-reader">Everyone</span>
       </figure>
 
@@ -23,7 +23,7 @@
       <% end %>
     </li>
 
-    <hr class="separator full-width" style="--border-style: solid">
+    <hr class="separator separator--solid full-width">
 
     <%= user_filter_search_tag if users.count > 20 %>
 

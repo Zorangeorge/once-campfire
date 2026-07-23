@@ -12,6 +12,18 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  test "joining open rooms is idempotent" do
+    user = users(:jz)
+
+    assert_difference -> { user.reload.rooms.opens.count }, +Rooms::Open.where.not(id: user.rooms.select(:id)).count do
+      user.join_open_rooms
+    end
+
+    assert_no_difference -> { user.reload.rooms.opens.count } do
+      user.join_open_rooms
+    end
+  end
+
   test "deactivating a user deletes push subscriptions, searches, memberships for non-direct rooms, and changes their email address" do
     assert_difference -> { Membership.count }, -users(:david).memberships.without_direct_rooms.count do
     assert_difference -> { Push::Subscription.count }, -users(:david).push_subscriptions.count do

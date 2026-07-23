@@ -374,6 +374,10 @@ img.message__attachment {
   }
 }
 
+.message__action-btn--auto {
+  flex-basis: auto;
+}
+
 .message__edit-btn {
   display: none;
 
@@ -572,7 +576,7 @@ img.message__attachment {
     block-size: 100%;
     content: "";
     inline-size: 100%;
-    inset-inline-start: var(--percentage);
+    inset-inline-start: var(--percentage, 0);
     position: absolute;
     transform: translateX(-100%);
     z-index: 1;
@@ -593,3 +597,15 @@ img.message__attachment {
     inline-size: 1.4em;
   }
 }
+
+.message__pending-upload--progress-0 { --percentage: 0%; }
+.message__pending-upload--progress-10 { --percentage: 10%; }
+.message__pending-upload--progress-20 { --percentage: 20%; }
+.message__pending-upload--progress-30 { --percentage: 30%; }
+.message__pending-upload--progress-40 { --percentage: 40%; }
+.message__pending-upload--progress-50 { --percentage: 50%; }
+.message__pending-upload--progress-60 { --percentage: 60%; }
+.message__pending-upload--progress-70 { --percentage: 70%; }
+.message__pending-upload--progress-80 { --percentage: 80%; }
+.message__pending-upload--progress-90 { --percentage: 90%; }
+.message__pending-upload--progress-100 { --percentage: 100%; }

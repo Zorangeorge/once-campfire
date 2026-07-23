@@ -1,9 +1,12 @@
 class UsersController < ApplicationController
-  require_unauthenticated_access only: %i[ new create ]
+  allow_unauthenticated_access only: %i[ new create ]
 
+  before_action :restore_authentication, only: %i[ new create ]
+  before_action :redirect_signed_in_user_to_root, only: :create
   before_action :set_user, only: :show
-  before_action :ensure_password_registration_enabled, only: %i[ new create ]
   before_action :verify_join_code, only: %i[ new create ]
+  before_action :join_signed_in_user, only: :new
+  before_action :ensure_password_registration_enabled, only: %i[ new create ]
 
   def new
     @user = User.new
@@ -27,12 +30,20 @@ class UsersController < ApplicationController
 
     def ensure_password_registration_enabled
       unless helpers.password_registration_enabled?
+        session[:return_to_after_authenticating] = request.url if helpers.sso_enabled?
         redirect_to new_session_url, alert: "Sign in with your SSO provider to join."
       end
     end
 
     def verify_join_code
       head :not_found if Current.account.join_code != params[:join_code]
+    end
+
+    def join_signed_in_user
+      return unless signed_in?
+
+      Current.user.join_open_rooms
+      redirect_to root_url
     end
 
     def user_params

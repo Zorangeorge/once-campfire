@@ -63,6 +63,27 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "new carries preserved invite URL through SSO origin parameter" do
+    room = rooms(:watercooler)
+    invite_url = room_url(room, invite: room.sso_invite_token)
+
+    with_env(
+      "OIDC_PROVIDERS" => "test",
+      "OIDC_TEST_ISSUER" => "https://idp.example.test/realms/campfire",
+      "OIDC_TEST_CLIENT_ID" => "test-client-id",
+      "OIDC_TEST_CLIENT_SECRET" => "test-client-secret",
+      "OIDC_TEST_REDIRECT_URI" => "https://campfire.example.test/auth/oidc_test/callback",
+      "DISABLE_PASSWORD_REGISTRATION" => "true"
+    ) do
+      get invite_url
+      assert_redirected_to new_session_url
+
+      follow_redirect!
+
+      assert_select "form[action='/auth/oidc_test'] input[name='origin'][value=?]", invite_url
+    end
+  end
+
   test "create with valid credentials" do
     assert_difference -> { Session.count }, +1 do
       post session_url, params: { email_address: "david@37signals.com", password: "secret123456" }

@@ -11,7 +11,7 @@
     <% users = @room.users.many? ? @room.users.without(Current.user) : @room.users %>
     <% users.each do | user | %>
       <div class="member flex flex-column gap fill-shade pad border-radius">
-        <figure class="avatar center" style="--avatar-border-radius: 10ch; --avatar-size: 10ch;" >
+        <figure class="avatar avatar--lg center">
           <%= avatar_tag user, loading: :lazy %>
         </figure>
 

@@ -6,7 +6,7 @@
   </div>
 <% end %>
 
-<section class="panel panel--wide txt-align-center flex flex-column position-relative" style="view-transition-name: custom-styles">
+<section class="panel panel--wide txt-align-center flex flex-column position-relative transition-custom-styles">
   <%= form_with model: @account, url: account_custom_styles_url, class: "flex flex-column gap",
       data: { controller: "form", action: "keydown.ctrl+enter->form#submit keydown.meta+enter->form#submit" } do |form| %>
     <div class="panel__button">
@@ -15,7 +15,7 @@
 
     <div class="pad-inline-double margin-inline">
       <h1 class="margin-none">Custom CSS</h1>
-      <p class="flex flex-wrap align-center justify-center gap margin-none-block-start" style="--column-gap: 0.5ch; --row-gap: 0">
+      <p class="flex flex-wrap align-center justify-center gap gap-column-custom-styles margin-none-block-start">
         <span>Add custom CSS styles.</span>
         <%= image_tag "alert.svg", class: "flex-inline colorize--black", size: 16, aria: { hidden: "true" } %>
         <span>Use Caution: you could break things.</span>

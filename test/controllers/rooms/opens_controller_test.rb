@@ -15,6 +15,15 @@ class Rooms::OpensControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "edit does not expose room SSO invite link when SSO is enabled" do
+    with_sso_enabled do
+      get edit_rooms_open_url(rooms(:pets))
+
+      assert_response :success
+      assert_select "input#invite_url", count: 0
+    end
+  end
+
   test "create" do
     assert_turbo_stream_broadcasts :rooms, count: 1 do
       post rooms_opens_url, params: { room: { name: "My New Room" } }
@@ -57,4 +66,16 @@ class Rooms::OpensControllerTest < ActionDispatch::IntegrationTest
     put rooms_open_url(rooms(:designers)), params: { room: { name: "Doesn't matter" } }
     assert_equal rooms(:designers).memberships.count, User.count
   end
+
+  private
+    def with_sso_enabled(&)
+      with_env(
+        "OIDC_PROVIDERS" => "test",
+        "OIDC_TEST_ISSUER" => "https://idp.example.test/realms/campfire",
+        "OIDC_TEST_CLIENT_ID" => "test-client-id",
+        "OIDC_TEST_CLIENT_SECRET" => "test-client-secret",
+        "OIDC_TEST_REDIRECT_URI" => "https://campfire.example.test/auth/oidc_test/callback",
+        &
+      )
+    end
 end

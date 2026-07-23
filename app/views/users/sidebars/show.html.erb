@@ -39,7 +39,7 @@
 
       <% if Current.user.administrator? || !Current.account.settings.restrict_room_creation_to_administrators? %>
         <%= link_to new_rooms_open_path, class: "rooms__new-btn btn room align-center gap txt-reversed", aria: { label: "New Chat Room" } do %>
-          <%= image_tag "add.svg", size: 20, aria: { hidden: "true" }, style: "view-transition-name: new-room" %>
+          <%= image_tag "add.svg", size: 20, aria: { hidden: "true" }, class: "transition-new-room" %>
         <% end %>
       <% end %>
     </div>
@@ -52,12 +52,12 @@
 
   <div class="flex align-end sidebar__tools gap justify-end">
     <%= link_to user_profile_path, class: "btn avatar flex-item-no-shrink sidebar__tool" do %>
-      <%= image_tag fresh_user_avatar_path(Current.user), size: 48, aria: { hidden: "true" }, style: "view-transition-name: avatar-#{Current.user.id}" %>
+      <%= image_tag fresh_user_avatar_path(Current.user), size: 48, aria: { hidden: "true" } %>
       <span class="for-screen-reader">My Settings</span>
     <% end %>
 
     <%= link_to edit_account_path, class: "btn align-center gap txt-reversed sidebar__tool" do %>
-      <%= image_tag "settings.svg", size: 20, aria: { hidden: "true" }, style: "view-transition-name: account-settings" %>
+      <%= image_tag "settings.svg", size: 20, aria: { hidden: "true" }, class: "transition-account-settings" %>
       <span class="for-screen-reader">Account Settings</span>
     <% end %>
   </div>

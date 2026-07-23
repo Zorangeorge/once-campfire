@@ -83,6 +83,35 @@
   }
 }
 
+.avatar--transparent {
+  --avatar-border-radius: 0;
+}
+
+.avatar--sm {
+  --avatar-size: 4ch;
+}
+
+.avatar--lg {
+  --avatar-border-radius: 10ch;
+  --avatar-size: 10ch;
+}
+
+.avatar--btn {
+  --avatar-size: var(--btn-size);
+}
+
+.avatar--bot {
+  --avatar-size: 2.65em;
+}
+
+.avatar--account-user {
+  --avatar-size: 3.75ch;
+}
+
+.avatar--white {
+  background: white;
+}
+
 .avatar__group {
   --avatar-size: 2.5ch;
 
