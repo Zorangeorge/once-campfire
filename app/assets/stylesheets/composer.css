@@ -13,8 +13,9 @@
   }
 }
 
-/* Attachments */
-.composer__attachment-btn {
+/* Attachments and emoji */
+.composer__attachment-btn,
+.composer__emoji-btn {
   --hover-filter: brightness(0.85);
 
   @media (any-hover: hover) {

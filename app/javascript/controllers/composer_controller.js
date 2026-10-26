@@ -43,6 +43,20 @@ export default class extends Controller {
     this.element.classList.remove(this.toolbarClass)
   }
 
+  focus() {
+    this.textTarget.focus()
+  }
+
+  insertEmoji({ detail: { character } }) {
+    const editor = this.textTarget.editor
+    const range = editor.getSelectedRange()
+
+    this.textTarget.focus()
+    editor.setSelectedRange(range)
+    editor.recordUndoEntry("Insert emoji")
+    editor.insertString(character)
+  }
+
   replaceMessageContent(content) {
     const editor = this.textTarget.editor
 

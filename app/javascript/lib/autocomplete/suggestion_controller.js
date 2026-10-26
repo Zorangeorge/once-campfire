@@ -266,7 +266,7 @@ export default class SuggestionController {
   }
 
   #didPressSpaceKey() {
-    if (this.#active && this.#spaceMatchesWordBoundary()) {
+    if (this.#active && this.#spaceMatchesWordBoundary() && this.delegate.commitsOnSpace !== false) {
       if (this.commitSuggestion()) {
         return false
       }

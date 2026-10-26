@@ -1,0 +1,97 @@
+/* Emoji picker */
+.composer__input:has(.emoji-picker) {
+  position: relative;
+}
+
+.emoji-picker__panel {
+  background-color: var(--color-bg);
+  block-size: min(25rem, 60dvh);
+  border-radius: 0.8em;
+  gap: var(--block-space-half);
+  inline-size: min(23rem, 100%);
+  inset-block-end: calc(100% + var(--block-space-half));
+  inset-inline-end: 0;
+  padding: var(--inline-space-half);
+  position: absolute;
+  z-index: 3;
+
+  .emoji-picker:not([open]) & {
+    display: none;
+  }
+}
+
+/* The composer's input row strips nested inputs of their borders */
+.input--actor .emoji-picker__panel .input {
+  --input-border-radius: 2em;
+  --input-border-size: 1px;
+  --input-padding: 0.4em 0.8em;
+
+  flex: none;
+}
+
+.emoji-picker__categories {
+  border-block-end: 1px solid var(--color-border);
+  flex: none;
+  padding-block-end: 0.2em;
+}
+
+.emoji-picker__category,
+.emoji-picker__emoji {
+  background: none;
+  border-radius: 0.4em;
+  border: 0;
+  cursor: pointer;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", var(--font-family);
+  line-height: 1;
+  padding: 0;
+
+  &:hover,
+  &:focus-visible {
+    background-color: var(--color-selected);
+    outline: none;
+  }
+}
+
+.emoji-picker__category {
+  font-size: 1.1rem;
+  padding: 0.25em;
+}
+
+.emoji-picker__list {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.emoji-picker__group-name {
+  background-color: var(--color-bg);
+  color: var(--color-border-darker);
+  font-weight: 600;
+  inset-block-start: 0;
+  margin: 0;
+  padding-block: 0.3em;
+  position: sticky;
+  z-index: 1;
+}
+
+.emoji-picker__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(2.4rem, 1fr));
+}
+
+.emoji-picker__emoji {
+  aspect-ratio: 1;
+  font-size: 1.5rem;
+}
+
+.emoji-picker__status {
+  color: var(--color-border-darker);
+  margin: var(--block-space) 0;
+  text-align: center;
+}
+
+/* Shortcode suggestions in the composer */
+.emoji-suggestion__character {
+  font-size: 1.3em;
+  line-height: 1;
+}

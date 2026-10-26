@@ -29,6 +29,8 @@
                           composer_target: "text" } %>
                 </div>
 
+                <%= render "rooms/show/emoji_picker" %>
+
                 <label class="btn btn--borderless txt-small flex-item-no-shrink composer__attachment-btn input--file">
                   <%= image_tag "attachment.svg", size: 22, class: "colorize--black", aria: { hidden: "true" } %>
                   <input type="file" data-action="composer#filePicked" multiple />

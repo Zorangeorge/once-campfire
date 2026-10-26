@@ -1,0 +1,21 @@
+<details class="emoji-picker flex-item-no-shrink" data-controller="emoji-picker"
+    data-action="toggle->emoji-picker#toggle click@document->emoji-picker#closeOnClickOutside keydown.esc->emoji-picker#close:prevent emoji-picker:pick->composer#insertEmoji emoji-picker:close->composer#focus">
+  <summary class="btn btn--borderless txt-small composer__emoji-btn">
+    <%= image_tag "emoji.svg", size: 22, class: "colorize--black", aria: { hidden: "true" } %>
+    <span class="for-screen-reader">Emoji</span>
+  </summary>
+
+  <div class="emoji-picker__panel flex flex-column border shadow" role="dialog" aria-label="Emoji" data-action="keydown->emoji-picker#navigate">
+    <input type="search" class="input emoji-picker__search txt-small" placeholder="Search emoji" aria-label="Search emoji" autocomplete="off"
+        data-emoji-picker-target="search" data-action="input->emoji-picker#search keydown.enter->emoji-picker#pickFirst">
+
+    <nav class="emoji-picker__categories flex justify-space-between" aria-label="Emoji categories" data-emoji-picker-target="categories"></nav>
+
+    <div class="emoji-picker__list" data-emoji-picker-target="list" data-action="click->emoji-picker#pick">
+      <div data-emoji-picker-target="results" hidden></div>
+      <div data-emoji-picker-target="groups">
+        <p class="emoji-picker__status txt-small">Loading…</p>
+      </div>
+    </div>
+  </div>
+</details>
